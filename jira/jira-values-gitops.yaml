@@ -1,0 +1,42 @@
+database:
+  type: postgres72
+  url: jdbc:postgresql://jira-postgres:5432/jiradb
+  driver: org.postgresql.Driver
+  credentials:
+    secretName: jira-db-secret
+    usernameSecretKey: username
+    passwordSecretKey: password
+
+volumes:
+  localHome:
+    persistentVolumeClaim:
+      create: true
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 10Gi
+
+  sharedHome:
+    persistentVolumeClaim:
+      create: true
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 10Gi
+
+singleNode: true
+
+resources:
+  container:
+    requests:
+      cpu: "2"
+      memory: "4Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+ingress:
+  create: false
+  https: false
