@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jira
+  namespace: argocd
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://atlassian.github.io/data-center-helm-charts
+      chart: jira
+      targetRevision: 2.0.15
+      helm:
+        valueFiles:
+          - $values/jira/jira-values-gitops.yaml
+
+    - repoURL: https://github.com/cpmcx/gitops-k8s-argocd.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jira
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
